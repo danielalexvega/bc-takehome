@@ -1,24 +1,50 @@
 import { useState, useEffect } from "react";
 
-export default function Home() {
+export const getStaticProps = async () => {
+    const res = await fetch(
+        "https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryIds"
+    );
+    const data = await res.json();
+
+    const entryIdArr = [];
+
+    for (let i = 0; i < data.length; i++) {
+        try {
+            let entryIdRes = await fetch(
+                `https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryById?id=${data[i]}`
+            );
+            let entryIdData = await entryIdRes.json();
+            entryIdArr.push(entryIdData);
+        } catch (error) {}
+    }
+
+    return { props: { entryIds: data, entryIdArr: entryIdArr } };
+};
+
+export default function Home({ entryIds, entryIdArr }) {
     const [showcaseEntryIds, setShowcaseEntryIds] = useState([]);
 
     useEffect(() => {
-        const fetchShowcaseEntryIds = async () => {
-            let response;
-
-            try {
-                response = await fetch(
-                    "https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryIds"
-                );
-                const data = response.json();
-                console.log(data);
-                setShowcaseEntryIds(data);
-            } catch (error) {}
-        };
-
-        fetchShowcaseEntryIds();
+        setShowcaseEntryIds(entryIds);
+        console.log(entryIdArr);
     });
 
-    return <div>index</div>;
+    return (
+        <div className="page-container">
+            {showcaseEntryIds.length !== 0 && (
+                <div>
+                    Entry Ids
+                    <div className="entryIds-container">
+                        {showcaseEntryIds.map((id, index) => {
+                            return (
+                                <div className="entryId" key={index}>
+                                    {id}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
