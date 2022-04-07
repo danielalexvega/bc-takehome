@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import ReactPaginate from "react-paginate";
+
+import styles from "../styles/Home.module.css";
 
 export const getStaticProps = async () => {
     const res = await fetch(
@@ -18,32 +21,99 @@ export const getStaticProps = async () => {
         } catch (error) {}
     }
 
-    return { props: { entryIds: data, entryIdArr: entryIdArr } };
+    return { props: { entryIdArr: entryIdArr } };
 };
 
-export default function Home({ entryIds, entryIdArr }) {
-    const [showcaseEntryIds, setShowcaseEntryIds] = useState([]);
+export default function Home({ entryIdArr }) {
+    const [showcaseEntryIdsArr, setShowcaseEntryIdsArr] = useState([]);
+    const [items, setItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [perPage, setPerPage] = useState(9);
+    const [page, setPage] = useState(0);
+    const [pages, setPages] = useState(1);
 
     useEffect(() => {
-        setShowcaseEntryIds(entryIds);
-        console.log(entryIdArr);
+        setShowcaseEntryIdsArr(entryIdArr);
+        setIsLoading(false);
+        setPages(Math.floor(entryIdArr.length / perPage));
+        setItems(entryIdArr.slice(page * perPage, (page + 1) * perPage));
     });
 
+    const handlePageClick = (event) => {
+        let newPage = event.selected;
+        setPage(newPage);
+        setItems(entryIdArr.slice(newPage * perPage, (newPage + 1) * perPage));
+    };
+
     return (
-        <div className="page-container">
-            {showcaseEntryIds.length !== 0 && (
-                <div>
-                    Entry Ids
-                    <div className="entryIds-container">
-                        {showcaseEntryIds.map((id, index) => {
+        <div className={styles.pageContainer}>
+            <div className={styles.linkContainer}>
+                <div className={styles.codeLink}>
+                    <a
+                        href="https://github.com/danielalexvega/bc-takehome"
+                        target="_blank"
+                    >
+                        Check out the code
+                    </a>
+                </div>
+            </div>
+            <h1 className={styles.pageContainerTitle}>BigCommerce Clients</h1>
+
+            {!isLoading && (
+                <>
+                    <div className={styles.paginationContainer}>
+                        <ReactPaginate
+                            previousLabel={"<<"}
+                            nextLabel={">>"}
+                            pageCount={pages}
+                            onPageChange={handlePageClick}
+                            activeClassName={"active"}
+                        />
+                    </div>
+                    <div className={styles.showcaseContainer}>
+                        {items.map((showcase, index) => {
                             return (
-                                <div className="entryId" key={index}>
-                                    {id}
+                                <div
+                                    className={styles.showcaseCard}
+                                    key={index}
+                                >
+                                    <a
+                                        className={styles.showcaseCardLink}
+                                        href={showcase.url.value}
+                                        target={showcase.url.target}
+                                    >
+                                        <div
+                                            className={styles.showcaseCardTitle}
+                                        >
+                                            <h2>{showcase.title}</h2>
+                                        </div>
+                                        <div
+                                            className={
+                                                styles.showcaseImageContainer
+                                            }
+                                        >
+                                            <img
+                                                className={styles.showcaseImage}
+                                                src={showcase.image.url}
+                                                alt={showcase.image.title}
+                                            />
+                                        </div>
+                                        <div>{showcase.description}</div>
+                                    </a>
                                 </div>
                             );
                         })}
                     </div>
-                </div>
+                    <div className={styles.paginationContainer}>
+                        <ReactPaginate
+                            previousLabel={"<<"}
+                            nextLabel={">>"}
+                            pageCount={pages}
+                            onPageChange={handlePageClick}
+                            activeClassName={"active"}
+                        />
+                    </div>
+                </>
             )}
         </div>
     );
