@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
+import Image from "next/image";
 
 import styles from "../styles/Home.module.css";
 
@@ -37,7 +38,7 @@ export default function Home({ entryIdArr }) {
         setIsLoading(false);
         setPages(Math.floor(entryIdArr.length / perPage));
         setItems(entryIdArr.slice(page * perPage, (page + 1) * perPage));
-    });
+    }, [entryIdArr, page, perPage]);
 
     const handlePageClick = (event) => {
         let newPage = event.selected;
@@ -52,6 +53,7 @@ export default function Home({ entryIdArr }) {
                     <a
                         href="https://github.com/danielalexvega/bc-takehome"
                         target="_blank"
+                        rel="noreferrer"
                     >
                         Check out the code
                     </a>
@@ -81,6 +83,7 @@ export default function Home({ entryIdArr }) {
                                         className={styles.showcaseCardLink}
                                         href={showcase.url.value}
                                         target={showcase.url.target}
+                                        rel="noreferrer"
                                     >
                                         <div
                                             className={styles.showcaseCardTitle}
@@ -92,7 +95,7 @@ export default function Home({ entryIdArr }) {
                                                 styles.showcaseImageContainer
                                             }
                                         >
-                                            <img
+                                            <Image
                                                 className={styles.showcaseImage}
                                                 src={showcase.image.url}
                                                 alt={showcase.image.title}
