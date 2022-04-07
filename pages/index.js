@@ -9,6 +9,7 @@ export const getStaticProps = async () => {
         "https://www.bigcommerce.com/actions/bcCore/interview/getShowcaseEntryIds"
     );
     const data = await res.json();
+    console.log(data);
 
     const entryIdArr = [];
 
@@ -79,30 +80,51 @@ export default function Home({ entryIdArr }) {
                                     className={styles.showcaseCard}
                                     key={index}
                                 >
-                                    <a
-                                        className={styles.showcaseCardLink}
-                                        href={showcase.url.value}
-                                        target={showcase.url.target}
-                                        rel="noreferrer"
-                                    >
-                                        <div
-                                            className={styles.showcaseCardTitle}
+                                    {showcase.url.value && (
+                                        <a
+                                            className={styles.showcaseCardLink}
+                                            href={showcase.url.value}
+                                            target={showcase.url.target}
+                                            rel="noreferrer"
                                         >
-                                            <h2>{showcase.title}</h2>
-                                        </div>
-                                        <div
-                                            className={
-                                                styles.showcaseImageContainer
-                                            }
-                                        >
-                                            <Image
-                                                className={styles.showcaseImage}
-                                                src={showcase.image.url}
-                                                alt={showcase.image.title}
-                                            />
-                                        </div>
-                                        <div>{showcase.description}</div>
-                                    </a>
+                                            <div
+                                                className={
+                                                    styles.showcaseCardTitle
+                                                }
+                                            >
+                                                <h2>{showcase.title}</h2>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.showcaseImageContainer
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.imageWrapper
+                                                    }
+                                                >
+                                                    <Image
+                                                        className={
+                                                            styles.showcaseImage
+                                                        }
+                                                        src={showcase.image.url}
+                                                        alt={
+                                                            showcase.image.title
+                                                        }
+                                                        width={
+                                                            showcase.image.width
+                                                        }
+                                                        height={
+                                                            showcase.image
+                                                                .height
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>{showcase.description}</div>
+                                        </a>
+                                    )}
                                 </div>
                             );
                         })}
