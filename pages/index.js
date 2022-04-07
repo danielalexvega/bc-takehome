@@ -125,6 +125,48 @@ export default function Home({ entryIdArr }) {
                                             <div>{showcase.description}</div>
                                         </a>
                                     )}
+                                    {!showcase.url.value && (
+                                        <div
+                                            className={styles.showcaseCardLink}
+                                        >
+                                            <div
+                                                className={
+                                                    styles.showcaseCardTitle
+                                                }
+                                            >
+                                                <h2>{showcase.title}</h2>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.showcaseImageContainer
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.imageWrapper
+                                                    }
+                                                >
+                                                    <Image
+                                                        className={
+                                                            styles.showcaseImage
+                                                        }
+                                                        src={showcase.image.url}
+                                                        alt={
+                                                            showcase.image.title
+                                                        }
+                                                        width={
+                                                            showcase.image.width
+                                                        }
+                                                        height={
+                                                            showcase.image
+                                                                .height
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>{showcase.description}</div>
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })}
